@@ -15,12 +15,29 @@ function App() {
       completed: false,
     },
   ]);
+
+  const [currentTab, setCurrentTab] = useState('');
+
   const completedTodos = todos.filter((todo) => !todo.completed);
-  console.log(completedTodos);
+  console.log(currentTab);
+
+  let filteredTodos = todos;
+  if (currentTab === 'active') {
+    filteredTodos = todos.filter((todo) => !todo.completed);
+  } else if (currentTab === 'completed') {
+    filteredTodos = todos.filter((todo) => todo.completed);
+  }
+
+  //  else {
+  //   filteredTodos=todos
+  // }
+
+  // else if (currentTab === 'active') {
+  //   filteredTodos=todos.filter((todo)=>!todo.completed)
+  // }
 
   return (
     <>
-    
       <header>
         <div className='hpic'>{/* <img src='/h-back.jpg' alt='' /> */}</div>
         <h1 className='header-text'>T O D O</h1>
@@ -29,13 +46,17 @@ function App() {
       <div className='container'>
         <form
           onSubmit={(e) => {
-            e.preventDefault();
-            const updatedT = [
-              ...todos,
-              { title: text, id: Date.now(), completed: false },
-            ];
-            setTodos(updatedT);
-            setText('');
+            if (text.length < 1) {
+              alert('No text to add');
+            } else {
+              e.preventDefault();
+              const updatedT = [
+                ...todos,
+                { title: text, id: Date.now(), completed: false },
+              ];
+              setTodos(updatedT);
+              setText('');
+            }
           }}
           className='add-form'
         >
@@ -53,7 +74,7 @@ function App() {
           </div>
         </form>
 
-        {todos.map((todo) => (
+        {filteredTodos.map((todo) => (
           <div
             onClick={() => {
               const newList = todos.map((newArrayTodo) =>
@@ -72,12 +93,29 @@ function App() {
               // id={`todo-${todo.id}`}
               className='checkbox'
               type='checkbox'
+              readOnly
             />{' '}
             <label>{todo.title}</label>
           </div>
         ))}
 
-        <p> Things to do {completedTodos.length}</p>
+        <div className='footer'>
+          <p> Things todo {completedTodos.length}</p>
+
+          <button onClick={() => setCurrentTab('all')}>ALL</button>
+
+          <button onClick={() => setCurrentTab('active')}>Active</button>
+
+          <button onClick={() => setCurrentTab('completed')}>Completed</button>
+
+          <button
+            onClick={() => {
+              setTodos(completedTodos);
+            }}
+          >
+            Clear done
+          </button>
+        </div>
       </div>
     </>
   );

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import './App.css';
 
 function App() {
@@ -43,8 +44,10 @@ function App() {
         <h1 className='header-text'>T O D O</h1>
       </header>
 
-      <div className='container'>
-        <form
+
+      <div className='adding-todo'>
+
+      <form
           onSubmit={(e) => {
             if (text.length < 1) {
               alert('No text to add');
@@ -73,6 +76,10 @@ function App() {
             </button>
           </div>
         </form>
+      </div>
+
+      <div className='container'>
+       
 
         {filteredTodos.map((todo) => (
           <div
@@ -81,13 +88,23 @@ function App() {
                 newArrayTodo.id === todo.id
                   ? { ...newArrayTodo, completed: !newArrayTodo.completed }
                   : newArrayTodo
+                  
               );
+              
               setTodos(newList);
               // console.log(newList);
+
+            
             }}
+
+            
             className={`task${todo.completed ? 'container task line' : ''}`}
             key={todo.id}
           >
+            <div className='icon-cross'> 
+<img src="/icon-cross.svg" alt="" />
+
+            </div>
             <input
               checked={todo.completed}
               // id={`todo-${todo.id}`}
@@ -99,7 +116,7 @@ function App() {
           </div>
         ))}
 
-        <div className='footer'>
+<div className='footer'>
           <p> Things todo {completedTodos.length}</p>
 
           <button onClick={() => setCurrentTab('all')}>ALL</button>

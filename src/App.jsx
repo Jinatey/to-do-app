@@ -63,7 +63,7 @@ function App() {
           }}
           className='add-form'
         >
-          <div className=' form-control input'>
+          <div className=' form-control-input'>
             <input
               value={text}
               onChange={(e) => setText(e.target.value)}
@@ -101,10 +101,7 @@ function App() {
             className={`task${todo.completed ? 'container task line' : ''}`}
             key={todo.id}
           >
-            <div className='icon-cross'> 
-<img src="/icon-cross.svg" alt="" />
-
-            </div>
+           
             <input
               checked={todo.completed}
               // id={`todo-${todo.id}`}
@@ -113,10 +110,18 @@ function App() {
               readOnly
             />{' '}
             <label>{todo.title}</label>
+
+            <div  className='icon-cross'> 
+<img src="/icon-cross.svg" alt="" />
+
+            </div>
           </div>
+          
         ))}
 
-<div className='footer'>
+
+      </div>
+      <div className='footer'>
           <p> Things todo {completedTodos.length}</p>
 
           <button onClick={() => setCurrentTab('all')}>ALL</button>
@@ -133,7 +138,6 @@ function App() {
             Clear done
           </button>
         </div>
-      </div>
     </>
   );
 }

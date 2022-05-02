@@ -3,6 +3,10 @@ import { useState } from 'react';
 import './App.css';
 
 function App() {
+  const lightIcon = <img src='./sun.svg' alt='' />;
+
+  const sunIcon = <img src='./moon.svg' alt='' />;
+
   const [text, setText] = useState('');
 
   const [todos, setTodos] = useState([
@@ -17,10 +21,10 @@ function App() {
     },
   ]);
 
+  const [darkMode, setDarkMode] = useState(false);
   const [currentTab, setCurrentTab] = useState('');
 
   const completedTodos = todos.filter((todo) => !todo.completed);
-  console.log(currentTab);
 
   let filteredTodos = todos;
   if (currentTab === 'active') {
@@ -38,16 +42,32 @@ function App() {
   // }
 
   return (
-    <>
+    <div>
       <header>
-        <div className='hpic'>{/* <img src='/h-back.jpg' alt='' /> */}</div>
+        <div className={`hpic ${darkMode ? 'hpic2' : ''}`}>
+          {/* <img src='/h-back.jpg' alt='' /> */}
+        </div>
         <h1 className='header-text'>T O D O</h1>
+
+        <div className='theme-btn-wrap'>
+          <button
+            className='theme-btn'
+            onClick={() => {
+              setDarkMode(!darkMode);
+              if (darkMode) {
+                document.body.classList.remove('bg-dark');
+              } else {
+                document.body.classList.add('bg-dark');
+              }
+            }}
+          >
+            {darkMode ? lightIcon : sunIcon}
+          </button>
+        </div>
       </header>
 
-
-      <div className='adding-todo'>
-
-      <form
+      <div className='adding-todo '>
+        <form
           onSubmit={(e) => {
             if (text.length < 1) {
               alert('No text to add');
@@ -63,8 +83,9 @@ function App() {
           }}
           className='add-form'
         >
-          <div className=' form-control-input'>
+          <div className='form-control-input'>
             <input
+              className={darkMode ? 'dark-ta' : 'light-ta'}
               value={text}
               onChange={(e) => setText(e.target.value)}
               type='text'
@@ -78,67 +99,89 @@ function App() {
         </form>
       </div>
 
-      <div className='container'>
-       
-
+      <div className={`container ${darkMode ? 'dark-ta' : 'light-ta'}`}>
         {filteredTodos.map((todo) => (
           <div
-            onClick={() => {
+            onClick={(e) => {
+              console.log(e.target);
+              if (e.target.className === 'icon-cross') return;
               const newList = todos.map((newArrayTodo) =>
                 newArrayTodo.id === todo.id
                   ? { ...newArrayTodo, completed: !newArrayTodo.completed }
                   : newArrayTodo
-                  
               );
-              
+
               setTodos(newList);
               // console.log(newList);
-
-            
             }}
-
-            
-            className={`task${todo.completed ? 'container task line' : ''}`}
+            className={`task ${todo.completed ? 'line' : ''}`}
             key={todo.id}
           >
-           
             <input
               checked={todo.completed}
               // id={`todo-${todo.id}`}
               className='checkbox'
               type='checkbox'
               readOnly
-            />{' '}
+            />
             <label>{todo.title}</label>
-
-            <div  className='icon-cross'> 
-<img src="/icon-cross.svg" alt="" />
-
+            <div className='icon-cross'>
+              <img
+                className='icon-cross'
+                onClick={() => {
+                  setTodos(todos.filter((t) => t.id !== todo.id));
+                }}
+                src='/icon-cross.svg'
+                alt=''
+              />
             </div>
           </div>
-          
         ))}
-
-
       </div>
-      <div className='footer'>
-          <p> Things todo {completedTodos.length}</p>
+      <div className={`footer ${darkMode ? 'dark-ta' : 'light-ta'}`}>
+        <p> Things todo {completedTodos.length}</p>
 
-          <button onClick={() => setCurrentTab('all')}>ALL</button>
-
-          <button onClick={() => setCurrentTab('active')}>Active</button>
-
-          <button onClick={() => setCurrentTab('completed')}>Completed</button>
-
+        <div className='desk-footer'>
           <button
-            onClick={() => {
-              setTodos(completedTodos);
-            }}
+            className={`${currentTab === 'all' ? 'cl-active' : ''}`}
+            onClick={() => setCurrentTab('all')}
           >
-            Clear done
+            ALL
+          </button>
+          <button
+            className={`${currentTab === 'active' ? 'cl-active' : ''}`}
+            onClick={() => setCurrentTab('active')}
+          >
+            Active
+          </button>
+          <button
+            className={`${currentTab === 'completed' ? 'cl-active' : ''}`}
+            onClick={() => setCurrentTab('completed')}
+          >
+            Completed
           </button>
         </div>
-    </>
+
+        <button
+          onClick={() => {
+            setTodos(completedTodos);
+          }}
+        >
+          Clear done
+        </button>
+      </div>
+
+      <div className='footer mobile-footer '>
+        {['all', 'active', 'completed'].map((tab) => (
+          <button
+            className={`${currentTab === tab ? 'cl-active' : ''}`}
+            onClick={() => setCurrentTab(tab)}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
 
